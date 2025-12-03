@@ -1,7 +1,13 @@
-PASTA_SAIDA = "audios"
-ATOR_ATUAL = "mago"
+import os
+
+PASTA_SAIDA = "audios_sessao"
+ATOR_ATUAL = "Antonio"
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ARQUIVO_FUNDO = os.path.join(BASE_DIR, "assets", "fundo.mp4") 
 
 FALAS = [
-    "Diante de vós, o portal se abre lentamente.",
-    "A magia ancestral consome tudo ao redor."
+    "Monark monarkando",
+    "arrasa quarteirão mama mia alanzoka bebe",
+    "Velozos e ejaculosos"
 ]
