@@ -26,12 +26,18 @@ def _criar_clip_base(caminho_audio, caminho_fundo):
 
     if caminho_fundo.endswith(('.jpg', '.jpeg', '.png')):
         video_fundo = ImageClip(caminho_fundo).set_duration(duracao)
+        
+        video_fundo = video_fundo.resize(height=1920)
+        video_fundo = video_fundo.crop(x1=0, y1=0, width=1080, height=1920, x_center=video_fundo.w/2, y_center=video_fundo.h/2)
     else:
         video_fundo = VideoFileClip(caminho_fundo)
         if video_fundo.duration < duracao:
             video_fundo = vfx.loop(video_fundo, duration=duracao)
         else:
             video_fundo = video_fundo.subclip(0, duracao)
+            
+        video_fundo = video_fundo.resize(height=1920)
+        video_fundo = video_fundo.crop(x1=0, y1=0, width=1080, height=1920, x_center=video_fundo.w/2, y_center=video_fundo.h/2)
             
     return video_fundo.set_audio(audio_clip), audio_clip, video_fundo
 
@@ -46,7 +52,7 @@ def _preparar_srt_para_windows(caminho_srt_utf8):
             
         return caminho_temp
     except Exception as e:
-        print(f"   [AVISO] Falha na conversão de encoding: {e}")
+        print(f"AVISO ENCODING: {e}")
         return caminho_srt_utf8
 
 async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo, caminho_saida_final):
@@ -65,7 +71,6 @@ async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo
             if os.path.exists(srt_path) and os.path.getsize(srt_path) > 0:
                 try:
                     srt_compativel = _preparar_srt_para_windows(srt_path)
-                    
                     if srt_compativel != srt_path:
                         arquivos_temporarios.append(srt_compativel)
                     
@@ -73,12 +78,10 @@ async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo
                     legendas = legendas.set_position(('center', 'center'))
                     
                     clip_pronto = CompositeVideoClip([video_base, legendas])
-                    print(f"   [OK] Legenda aplicada.")
                 except Exception as e:
-                    print(f"   [FALHA NA LEGENDA] Erro: {e}")
+                    print(f"FALHA LEGENDA: {e}")
                     clip_pronto = video_base
             else:
-                print(f"   [AVISO] Arquivo SRT vazio.")
                 clip_pronto = video_base
             
             clips_para_juntar.append(clip_pronto)
@@ -107,11 +110,8 @@ async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo
             try: res.close()
             except: pass
             
-        if arquivos_temporarios:
-            print(f"Limpando {len(arquivos_temporarios)} arquivos temporários...")
-            for arq in arquivos_temporarios:
-                try:
-                    if os.path.exists(arq):
-                        os.remove(arq)
-                except Exception as e:
-                    print(f"Não foi possível deletar {arq}: {e}")
+        for arq in arquivos_temporarios:
+            try:
+                if os.path.exists(arq):
+                    os.remove(arq)
+            except: pass
