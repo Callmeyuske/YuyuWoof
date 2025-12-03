@@ -52,6 +52,7 @@ def _preparar_srt_para_windows(caminho_srt_utf8):
 async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo, caminho_saida_final):
     clips_para_juntar = []
     resources_to_close = []
+    arquivos_temporarios = []
 
     try:
         print(f"--- MONTAGEM FINAL ({len(lista_audios)} partes) ---")
@@ -64,6 +65,9 @@ async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo
             if os.path.exists(srt_path) and os.path.getsize(srt_path) > 0:
                 try:
                     srt_compativel = _preparar_srt_para_windows(srt_path)
+                    
+                    if srt_compativel != srt_path:
+                        arquivos_temporarios.append(srt_compativel)
                     
                     legendas = SubtitlesClip(srt_compativel, gerar_generator_legenda)
                     legendas = legendas.set_position(('center', 'center'))
@@ -102,3 +106,12 @@ async def montar_video_final_concatenado(lista_audios, lista_srts, caminho_fundo
         for res in resources_to_close:
             try: res.close()
             except: pass
+            
+        if arquivos_temporarios:
+            print(f"Limpando {len(arquivos_temporarios)} arquivos temporários...")
+            for arq in arquivos_temporarios:
+                try:
+                    if os.path.exists(arq):
+                        os.remove(arq)
+                except Exception as e:
+                    print(f"Não foi possível deletar {arq}: {e}")
