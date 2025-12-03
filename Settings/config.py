@@ -4,7 +4,7 @@ PASTA_SAIDA = "audios_sessao"
 ATOR_ATUAL = "Antonio"
 
 # Opcoes: "Adventure" ou "SinglePosts"
-MODO_GERACAO = "Adventure"
+MODO_GERACAO = "SinglePosts"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARQUIVO_FUNDO = os.path.join(BASE_DIR, "assets", "fundo.gif") 
