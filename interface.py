@@ -19,20 +19,20 @@ class YuyuWoofApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("YuyuWoof - Interface Infernal v1.0")
+        self.title("YuyuWoof_v1")
         self.geometry("700x650")
-        self.resizable(False, False)
+        self.resizable(True, True)
 
         # Variáveis
         self.caminho_fundo = None
         self.modo_geracao = ctk.StringVar(value="SinglePosts")
-        self.ator_selecionado = ctk.StringVar(value="Antonio")
+        self.ator_selecionado = ctk.StringVar(value="Template")
 
         self._montar_layout()
 
     def _montar_layout(self):
         # --- Título ---
-        self.lbl_titulo = ctk.CTkLabel(self, text="YuyuWoof Automation", font=("Roboto", 24, "bold"))
+        self.lbl_titulo = ctk.CTkLabel(self, text="YuYuWoof", font=("Roboto", 24, "bold"))
         self.lbl_titulo.pack(pady=15)
 
         # --- Seleção de Fundo ---
