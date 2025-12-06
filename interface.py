@@ -97,10 +97,9 @@ class YuyuWoofApp(ctk.CTk):
             self.log("ERRO: O roteiro está vazio.")
             return
 
-        # Bloqueia botão
+        # BLOQUEIA O BOTAO = TRAVA TUDO 
         self.btn_start.configure(state="disabled", text="PROCESSANDO...")
         
-        # Separa por linha (mais seguro que vírgula)
         falas = [linha.strip() for linha in texto_raw.split('\n') if linha.strip()]
 
         # Inicia processamento em background para não travar a UI
